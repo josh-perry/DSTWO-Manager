@@ -12,15 +12,15 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            
+
             <Grid Grid.Row="0" Margin="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                
+
                 <ComboBox x:Name="DriveComboBox" Grid.Column="0"/>
-                
+
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
                     <Button Content="Connect" Margin="5,0,5,0" Width="80" Click="ConnectButton_OnClick"/>
                 </StackPanel>
@@ -29,22 +29,26 @@
             <TabControl x:Name="TabControl" IsEnabled="False" Grid.Row="1" Margin="5">
                 <TabItem Header="Install Plugins">
                     <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="101*"/>
+                            <ColumnDefinition Width="386*"/>
+                        </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="32"/>
                         </Grid.RowDefinitions>
 
-                        <DataGrid x:Name="InstallPluginsDataGrid" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding Source=UninstalledPlugins}">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Plugin" Width="Auto" Binding="{Binding Name}"/>
-                            <DataGridTextColumn Header="Description" Width="*" Binding="{Binding Description}"/>
-                            <DataGridTextColumn Header="Filesize" Binding="{Binding HumanFilesize}"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                        <DataGrid x:Name="InstallPluginsDataGrid" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding Source=UninstalledPlugins}" Grid.ColumnSpan="2">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Plugin" Width="Auto" Binding="{Binding Name}"/>
+                                <DataGridTextColumn Header="Path" Width="*" Binding="{Binding Path}"/>
+                                <DataGridTextColumn Header="Filesize" Binding="{Binding HumanFilesize}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
 
-                    <Button Grid.Row="1" Margin="5" Width="140" HorizontalAlignment="Right" Click="InstallButton_OnClicked">Install selected</Button>
-                </Grid>
-        </TabItem>
+                        <Button Grid.Row="1" Margin="0,5,5,5" Width="140" HorizontalAlignment="Right" Click="InstallButton_OnClick" Grid.Column="1">Install selected</Button>
+                    </Grid>
+                </TabItem>
 
                 <TabItem Header="Manage Plugins">
                     <Grid>
@@ -52,26 +56,26 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="32"/>
                         </Grid.RowDefinitions>
-                        
+
                         <DataGrid x:Name="InstalledPluginsDataGrid" Grid.Row="0" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding Source=InstalledPlugins}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Plugin" Width="Auto" Binding="{Binding Name}"/>
-                                <DataGridTextColumn Header="Description" Width="*" Binding="{Binding Description}"/>
+                                <DataGridTextColumn Header="Path" Width="*" Binding="{Binding Path}"/>
                                 <DataGridTextColumn Header="Filesize" Binding="{Binding Filesize}"/>
                             </DataGrid.Columns>
                         </DataGrid>
 
-                        <Button Grid.Row="1" Margin="5" Width="140" HorizontalAlignment="Right">Uninstall selected</Button>
+                        <Button Grid.Row="1" Margin="5" Width="140" HorizontalAlignment="Right" Click="UninstallButton_OnClick">Uninstall selected</Button>
                     </Grid>
                 </TabItem>
                 <TabItem Header="File Sync"/>
-                
+
                 <TabItem Header="Configuration">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        
+
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="120"/>
                             <ColumnDefinition Width="*"/>
@@ -81,7 +85,7 @@
                         <TextBox Grid.Row="0" Grid.Column="1" x:Name="LocalPluginSources" Margin="5" Text="W:\Plugin repo;"/>
                     </Grid>
                 </TabItem>
-                
+
                 <TabItem Header="About">
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                         <Image Margin="5" Source="Resources/GitHub_Mark_64px.png" Width="64" Height="64"/>

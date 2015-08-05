@@ -7,7 +7,7 @@ namespace DSTWO_Manager
     {
         public string Name { get; set; }
         public List<string> Files { get; set; }
-        public string Description { get; set; }
+        public string Path { get; set; }
         public long Filesize { get; set; }
 
         public string HumanFilesize

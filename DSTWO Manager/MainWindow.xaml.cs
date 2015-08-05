@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Navigation;
 
@@ -56,7 +57,7 @@ namespace DSTWO_Manager
 
                     var plugin = new Plugin();
                     plugin.Name = Path.GetFileNameWithoutExtension(ini);
-                    plugin.Description = dir;
+                    plugin.Path = dir;
                     plugin.Filesize = filesize;
                     plugin.Files = files;
 
@@ -109,9 +110,14 @@ namespace DSTWO_Manager
             {
                 if (!file.EndsWith(".ini", true, CultureInfo.CurrentCulture)) continue;
 
+                var f = Path.GetFileNameWithoutExtension(file);
+                var filelist = new List<string> {f + ".ini", f + ".bmp", f + ".nds"};
+
                 var plug = new Plugin
                 {
-                    Name = Path.GetFileNameWithoutExtension(file)
+                    Name = f,
+                    Path = DstwoPlugDirectory,
+                    Files = filelist // TODO: De-un-hardcode this maybe?
                 };
 
                 InstalledPlugins.Add(plug);
@@ -141,7 +147,7 @@ namespace DSTWO_Manager
             e.Handled = true;
         }
 
-        private void InstallButton_OnClicked(object sender, RoutedEventArgs e)
+        private void InstallButton_OnClick(object sender, RoutedEventArgs e)
         {
             foreach (Plugin plugin in InstallPluginsDataGrid.SelectedItems)
             {
@@ -161,9 +167,34 @@ namespace DSTWO_Manager
 
                 foreach (var file in plugin.Files)
                 {
-                    File.Copy(Path.Combine(plugin.Description, file), Path.Combine(DstwoPlugDirectory, file));
+                    File.Copy(Path.Combine(plugin.Path, file), Path.Combine(DstwoPlugDirectory, file));
                 }
+
+                var p = plugin;
+                p.Path = DstwoPlugDirectory;
+                InstalledPlugins.Add(p);
             }
+        }
+
+        private void UninstallButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var l = new List<Plugin>();
+            foreach (Plugin x in InstalledPluginsDataGrid.SelectedItems)
+                l.Add(x);
+            
+            InstalledPluginsDataGrid.ItemsSource = null;
+            
+            foreach (Plugin plugin in l)
+            {
+                foreach (var file in plugin.Files)
+                {
+                    File.Delete(Path.Combine(plugin.Path, file));
+                }
+
+                InstalledPlugins.Remove(plugin);
+            }
+
+            InstalledPluginsDataGrid.ItemsSource = InstalledPlugins;
         }
     }
 }
