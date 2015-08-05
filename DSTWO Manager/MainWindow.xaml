@@ -40,6 +40,13 @@
 
                         <DataGrid x:Name="InstallPluginsDataGrid" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding Source=UninstalledPlugins}" Grid.ColumnSpan="2">
                             <DataGrid.Columns>
+                                <DataGridTemplateColumn>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Image Source="{Binding Icon}" Height="16"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                                 <DataGridTextColumn Header="Plugin" Width="Auto" Binding="{Binding Name}"/>
                                 <DataGridTextColumn Header="Path" Width="*" Binding="{Binding Path}"/>
                                 <DataGridTextColumn Header="Filesize" Binding="{Binding HumanFilesize}"/>
@@ -59,6 +66,13 @@
 
                         <DataGrid x:Name="InstalledPluginsDataGrid" Grid.Row="0" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding Source=InstalledPlugins}">
                             <DataGrid.Columns>
+                                <DataGridTemplateColumn>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Image Source="{Binding Icon}" Height="16"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                                 <DataGridTextColumn Header="Plugin" Width="Auto" Binding="{Binding Name}"/>
                                 <DataGridTextColumn Header="Path" Width="*" Binding="{Binding Path}"/>
                                 <DataGridTextColumn Header="Filesize" Binding="{Binding HumanFilesize}"/>

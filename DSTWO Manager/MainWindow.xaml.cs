@@ -26,6 +26,7 @@ namespace DSTWO_Manager
             InitializeComponent();
 
             GetRemovableDrives();
+            
             GetRepoPlugins();
         }
 
@@ -37,6 +38,9 @@ namespace DSTWO_Manager
             // TODO: Seperate boxes instead of splitting by ;?
             foreach (var repo in LocalPluginSources.Text.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries))
             {
+                if (!Directory.Exists(repo))
+                    continue;
+
                 foreach (var dir in Directory.GetDirectories(repo))
                 {
                     var ini = "";

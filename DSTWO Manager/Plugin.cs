@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using Humanizer;
 
@@ -9,6 +11,15 @@ namespace DSTWO_Manager
         public string Name { get; set; }
         public List<string> Files { get; set; }
         public string Path { get; set; }
+
+        public Uri Icon
+        {
+            get
+            {
+                return new Uri(System.IO.Path.Combine(Path, Name + ".bmp"));
+            }
+            set { }
+        }
 
         public long Filesize
         {
