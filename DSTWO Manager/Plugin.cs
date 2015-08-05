@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Humanizer;
 
 namespace DSTWO_Manager
 {
@@ -7,6 +8,12 @@ namespace DSTWO_Manager
         public string Name { get; set; }
         public List<string> Files { get; set; }
         public string Description { get; set; }
-        public int Filesize { get; set; }
+        public long Filesize { get; set; }
+
+        public string HumanFilesize
+        {
+            get { return Filesize.Bytes().Kilobytes.ToString("#.#KB"); }
+            set { }
+        }
     }
 }
