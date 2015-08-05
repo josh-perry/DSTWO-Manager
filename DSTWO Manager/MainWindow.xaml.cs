@@ -42,10 +42,12 @@ namespace DSTWO_Manager
                     var ini = "";
                     long filesize = 0;
                     var directoryInfo = new DirectoryInfo(dir);
+                    var files = new List<string>();
 
                     foreach (var file in directoryInfo.GetFiles())
                     {
                         filesize += file.Length;
+                        files.Add(file.Name);
 
                         if (!file.Name.EndsWith(".ini", true, CultureInfo.CurrentCulture)) continue;
 
@@ -56,6 +58,7 @@ namespace DSTWO_Manager
                     plugin.Name = Path.GetFileNameWithoutExtension(ini);
                     plugin.Description = dir;
                     plugin.Filesize = filesize;
+                    plugin.Files = files;
 
                     UninstalledPlugins.Add(plugin);
                 }
@@ -136,6 +139,31 @@ namespace DSTWO_Manager
         {
             Process.Start(new ProcessStartInfo(e.Uri.ToString()));
             e.Handled = true;
+        }
+
+        private void InstallButton_OnClicked(object sender, RoutedEventArgs e)
+        {
+            foreach (Plugin plugin in InstallPluginsDataGrid.SelectedItems)
+            {
+                var scan_fail = false;
+                foreach (var file in plugin.Files)
+                {
+                    if (File.Exists(Path.Combine(DstwoPlugDirectory, file)))
+                    {
+                        scan_fail = true;
+                        MessageBox.Show($"Plugin: {plugin.Name} is already installed!");
+                        break;
+                    }
+                }
+
+                if (scan_fail)
+                    continue;
+
+                foreach (var file in plugin.Files)
+                {
+                    File.Copy(Path.Combine(plugin.Description, file), Path.Combine(DstwoPlugDirectory, file));
+                }
+            }
         }
     }
 }
