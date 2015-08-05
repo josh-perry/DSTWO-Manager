@@ -61,7 +61,7 @@
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Plugin" Width="Auto" Binding="{Binding Name}"/>
                                 <DataGridTextColumn Header="Path" Width="*" Binding="{Binding Path}"/>
-                                <DataGridTextColumn Header="Filesize" Binding="{Binding Filesize}"/>
+                                <DataGridTextColumn Header="Filesize" Binding="{Binding HumanFilesize}"/>
                             </DataGrid.Columns>
                         </DataGrid>
 

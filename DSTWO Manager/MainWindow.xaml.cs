@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Windows;
 using System.Windows.Navigation;
 
@@ -41,13 +40,11 @@ namespace DSTWO_Manager
                 foreach (var dir in Directory.GetDirectories(repo))
                 {
                     var ini = "";
-                    long filesize = 0;
                     var directoryInfo = new DirectoryInfo(dir);
                     var files = new List<string>();
 
                     foreach (var file in directoryInfo.GetFiles())
                     {
-                        filesize += file.Length;
                         files.Add(file.Name);
 
                         if (!file.Name.EndsWith(".ini", true, CultureInfo.CurrentCulture)) continue;
@@ -58,7 +55,6 @@ namespace DSTWO_Manager
                     var plugin = new Plugin();
                     plugin.Name = Path.GetFileNameWithoutExtension(ini);
                     plugin.Path = dir;
-                    plugin.Filesize = filesize;
                     plugin.Files = files;
 
                     UninstalledPlugins.Add(plugin);
