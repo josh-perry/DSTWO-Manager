@@ -22,7 +22,8 @@
                 <ComboBox x:Name="DriveComboBox" Grid.Column="0"/>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <Button Content="Connect" Margin="5,0,5,0" Width="80" Click="ConnectButton_OnClick"/>
+                    <Button Content="Refresh" Margin="5,0,0,0" Width="80" Click="RefreshButton_OnClick"/>
+                    <Button Content="Connect" Margin="5,0,0,0" Width="80" Click="ConnectButton_OnClick"/>
                 </StackPanel>
             </Grid>
 
@@ -85,19 +86,23 @@
                 <TabItem Header="File Sync"/>
 
                 <TabItem Header="Configuration">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
+                    <StackPanel>
+                        <GroupBox Header="Manager settings" Margin="5">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="120"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Local sources" Margin="5"/>
-                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="LocalPluginSources" Margin="5" Text="W:\Plugin repo;"/>
-                    </Grid>
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Local sources" Margin="5"/>
+                                <TextBox Grid.Row="0" Grid.Column="1" x:Name="LocalPluginSources" Margin="5" Text="W:\Plugin repo;"/>
+                            </Grid>
+                        </GroupBox>
+                    </StackPanel>
                 </TabItem>
 
                 <TabItem Header="About">

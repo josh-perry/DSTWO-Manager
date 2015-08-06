@@ -196,5 +196,10 @@ namespace DSTWO_Manager
 
             InstalledPluginsDataGrid.ItemsSource = InstalledPlugins;
         }
+
+        private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            GetRemovableDrives();
+        }
     }
 }
