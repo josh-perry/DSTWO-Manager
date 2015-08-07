@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Windows;
 using System.Windows.Navigation;
+using Humanizer;
 
 namespace DSTWO_Manager
 {
@@ -93,7 +94,10 @@ namespace DSTWO_Manager
             DstwoPlugDirectory = Path.Combine(driveLetter, "_dstwoplug");
 
             if (!Directory.Exists(DstwoPlugDirectory))
+            {
+                MessageBox.Show("Couldn't find the _dstwoplug directory on root!");
                 return false;
+            }
 
             // Clear it just in case
             InstalledPlugins = new ObservableCollection<Plugin>();
@@ -101,7 +105,20 @@ namespace DSTWO_Manager
             // Get installed plugins
             InstalledPlugins = GetInstalledPlugins();
 
+            UpdateFreeSpaceBar();
+
             return true;
+        }
+
+        private void UpdateFreeSpaceBar()
+        {
+            var driveInfo = new DriveInfo(ConnectedDrive);
+            AvailableSpaceProgressBar.Maximum = 100;
+            AvailableSpaceProgressBar.Value = 100 - (((float)driveInfo.AvailableFreeSpace / driveInfo.TotalSize) * 100);
+
+            var freeGB = driveInfo.AvailableFreeSpace.Bytes().Gigabytes.ToString("#.#GB");
+            var totalGB = driveInfo.TotalSize.Bytes().Gigabytes.ToString("#.#GB");
+            AvailableSpaceTextBlock.Text = $"Free space ({freeGB}/{totalGB})";
         }
 
         public ObservableCollection<Plugin> GetInstalledPlugins()
@@ -136,9 +153,12 @@ namespace DSTWO_Manager
             }
             catch (Exception ex)
             {
-                TabControl.IsEnabled = false;
-                MessageBox.Show(ex.Message);
+                //TabControl.IsEnabled = false;
+                //MessageBox.Show(ex.Message);
             }
+
+            TabControl.IsEnabled = true;
+            UpdateFreeSpaceBar();
         }
 
         private void Hyperlink_OnRequestNavigate(object sender, RequestNavigateEventArgs e)

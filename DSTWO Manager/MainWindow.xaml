@@ -83,18 +83,42 @@
                         <Button Grid.Row="1" Margin="5" Width="140" HorizontalAlignment="Right" Click="UninstallButton_OnClick">Uninstall selected</Button>
                     </Grid>
                 </TabItem>
-                <TabItem Header="File Sync"/>
+                <TabItem Header="File Sync" Visibility="Collapsed"/>
 
                 <TabItem Header="Configuration">
                     <StackPanel>
-                        <GroupBox Header="Manager settings" Margin="5">
+                        <GroupBox Header="Connected device" Margin="5" Padding="5">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="180"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Software version" Margin="5"/>
+                                <TextBlock Grid.Row="0" Grid.Column="1" Text="Version x.y.z" HorizontalAlignment="Right" Margin="5"/>
+                                
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Firmware version" Margin="5"/>
+                                <TextBlock Grid.Row="1" Grid.Column="1" Text="Version x.y.z" HorizontalAlignment="Right" Margin="5"/>
+
+                                <TextBlock Grid.Row="2" Grid.Column="0" x:Name="AvailableSpaceTextBlock" Text="Available space" Margin="5"/>
+                                <ProgressBar x:Name="AvailableSpaceProgressBar" Grid.Row="2" Grid.Column="1" Margin="5"/>
+                            </Grid>
+                        </GroupBox>
+                        
+                        <GroupBox Header="Manager settings" Margin="5" Padding="5">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
 
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="180"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
 
