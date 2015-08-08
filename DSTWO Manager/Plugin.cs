@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using Humanizer;
 
@@ -10,13 +9,21 @@ namespace DSTWO_Manager
     {
         public string Name { get; set; }
         public List<string> Files { get; set; }
-        public string Path { get; set; }
+        public string ParentPath { get; set; }
 
         public Uri Icon
         {
             get
             {
-                return new Uri(System.IO.Path.Combine(Path, Name + ".bmp"));
+                var p = Path.Combine("icon_cache/", Name + ".bmp");
+
+                if (!Directory.Exists("icon_cache"))
+                    Directory.CreateDirectory("icon_cache");
+
+                if (!File.Exists(p))
+                    File.Copy(Path.Combine(ParentPath, Name + ".bmp"), p);
+
+                return new Uri(Path.GetFullPath(p));
             }
             set { }
         }
@@ -31,7 +38,7 @@ namespace DSTWO_Manager
                 {
                     try
                     {
-                        f += new FileInfo(System.IO.Path.Combine(Path, file)).Length;
+                        f += new FileInfo(Path.Combine(ParentPath, file)).Length;
                     }
                     catch
                     {
@@ -48,6 +55,14 @@ namespace DSTWO_Manager
         {
             get { return Filesize.Bytes().Kilobytes.ToString("#.#KB"); }
             set { }
+        }
+
+        public void Uninstall()
+        {
+            foreach (var file in Files)
+            {
+                File.Delete(Path.Combine(ParentPath, file));
+            }
         }
     }
 }

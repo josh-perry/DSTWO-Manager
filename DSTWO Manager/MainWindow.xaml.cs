@@ -161,12 +161,6 @@ namespace DSTWO_Manager
             UpdateFreeSpaceBar();
         }
 
-        private void Hyperlink_OnRequestNavigate(object sender, RequestNavigateEventArgs e)
-        {
-            Process.Start(new ProcessStartInfo(e.Uri.ToString()));
-            e.Handled = true;
-        }
-
         private void InstallButton_OnClick(object sender, RoutedEventArgs e)
         {
             foreach (Plugin plugin in InstallPluginsDataGrid.SelectedItems)
@@ -206,11 +200,7 @@ namespace DSTWO_Manager
             
             foreach (Plugin plugin in l)
             {
-                foreach (var file in plugin.Files)
-                {
-                    File.Delete(Path.Combine(plugin.Path, file));
-                }
-
+                plugin.Uninstall();
                 InstalledPlugins.Remove(plugin);
             }
 
@@ -220,6 +210,18 @@ namespace DSTWO_Manager
         private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
         {
             GetRemovableDrives();
+        }
+
+        private void BlogButton_OnClick(object sender, RoutedEventArgs routedEventArgs)
+        {
+            Process.Start(new ProcessStartInfo("http://literallyjosh.com/"));
+            routedEventArgs.Handled = true;
+        }
+
+        private void GitHubButton_Clicked(object sender, RoutedEventArgs routedEventArgs)
+        {
+            Process.Start(new ProcessStartInfo("https://github.com/josh-perry/DSTWO-Manager"));
+            routedEventArgs.Handled = true;
         }
     }
 }

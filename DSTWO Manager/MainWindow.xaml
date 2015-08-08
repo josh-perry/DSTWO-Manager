@@ -130,13 +130,24 @@
                 </TabItem>
 
                 <TabItem Header="About">
-                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                        <Image Margin="5" Source="Resources/GitHub_Mark_64px.png" Width="64" Height="64"/>
-                        <TextBlock Margin="5" VerticalAlignment="Center">
-                            <Hyperlink NavigateUri="https://github.com/josh-perry/DSTWO-Manager" RequestNavigate="Hyperlink_OnRequestNavigate">
-                                GitHub
-                            </Hyperlink>
-                        </TextBlock>
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Button Margin="5" Click="BlogButton_OnClick" Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Margin="5" Source="Resources/literallyjosh_64px.png" Width="64" Height="64"/>
+                                <TextBlock Margin="5" VerticalAlignment="Center">
+                                    http://literallyjosh.com/
+                                </TextBlock>
+                            </StackPanel>
+                        </Button>
+                        
+                        <Button Click="GitHubButton_Clicked" Margin="5" Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Margin="5" Source="Resources/GitHub_Mark_64px.png" Width="64" Height="64"/>
+                                <TextBlock Margin="5" VerticalAlignment="Center">
+                                    Source code on GitHub
+                                </TextBlock>
+                            </StackPanel>
+                        </Button>
                     </StackPanel>
                 </TabItem>
             </TabControl>
