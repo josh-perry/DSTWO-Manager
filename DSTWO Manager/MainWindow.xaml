@@ -44,12 +44,12 @@
                                 <DataGridTemplateColumn>
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Image Source="{Binding Icon}" Height="16"/>
+                                            <Image Source="{Binding Icon}" Height="32"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
                                 <DataGridTextColumn Header="Plugin" Width="Auto" Binding="{Binding Name}"/>
-                                <DataGridTextColumn Header="Path" Width="*" Binding="{Binding Path}"/>
+                                <DataGridTextColumn Header="Repository" Width="*" Binding="{Binding ParentPath}"/>
                                 <DataGridTextColumn Header="Filesize" Binding="{Binding HumanFilesize}"/>
                             </DataGrid.Columns>
                         </DataGrid>
@@ -70,12 +70,11 @@
                                 <DataGridTemplateColumn>
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Image Source="{Binding Icon}" Height="16"/>
+                                            <Image Source="{Binding Icon}" Height="32"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="Plugin" Width="Auto" Binding="{Binding Name}"/>
-                                <DataGridTextColumn Header="Path" Width="*" Binding="{Binding Path}"/>
+                                <DataGridTextColumn Header="Plugin" Width="*" Binding="{Binding Name}"/>
                                 <DataGridTextColumn Header="Filesize" Binding="{Binding HumanFilesize}"/>
                             </DataGrid.Columns>
                         </DataGrid>

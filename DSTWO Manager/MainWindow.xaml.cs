@@ -7,6 +7,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Navigation;
 using Humanizer;
+using static System.String;
 
 namespace DSTWO_Manager
 {
@@ -29,48 +30,6 @@ namespace DSTWO_Manager
             GetRemovableDrives();
             
             GetRepoPlugins();
-        }
-
-        private void GetRepoPlugins()
-        {
-            UninstalledPlugins = new ObservableCollection<Plugin>();
-
-            // Local
-            // TODO: Seperate boxes instead of splitting by ;?
-            foreach (var repo in LocalPluginSources.Text.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries))
-            {
-                if (!Directory.Exists(repo))
-                    continue;
-
-                foreach (var dir in Directory.GetDirectories(repo))
-                {
-                    var ini = "";
-                    var directoryInfo = new DirectoryInfo(dir);
-                    var files = new List<string>();
-
-                    foreach (var file in directoryInfo.GetFiles())
-                    {
-                        files.Add(file.Name);
-
-                        if (!file.Name.EndsWith(".ini", true, CultureInfo.CurrentCulture)) continue;
-
-                        ini = file.FullName;
-                    }
-
-                    var plugin = new Plugin();
-                    plugin.Name = Path.GetFileNameWithoutExtension(ini);
-                    plugin.Path = dir;
-                    plugin.Files = files;
-
-                    UninstalledPlugins.Add(plugin);
-                }
-            }
-
-            // Remote
-            
-            //
-            InstallPluginsDataGrid.ItemsSource = null;
-            InstallPluginsDataGrid.ItemsSource = UninstalledPlugins;
         }
 
         public void GetRemovableDrives()
@@ -103,9 +62,10 @@ namespace DSTWO_Manager
             InstalledPlugins = new ObservableCollection<Plugin>();
 
             // Get installed plugins
-            InstalledPlugins = GetInstalledPlugins();
+            //InstalledPlugins = GetInstalledPlugins();
 
             UpdateFreeSpaceBar();
+            GetPluginsFromDsTwoPlug(DstwoPlugDirectory);
 
             return true;
         }
@@ -125,17 +85,30 @@ namespace DSTWO_Manager
         {
             foreach (var file in Directory.GetFiles(DstwoPlugDirectory))
             {
-                if (!file.EndsWith(".ini", true, CultureInfo.CurrentCulture)) continue;
+                var plugin_file = "";
 
-                var f = Path.GetFileNameWithoutExtension(file);
-                var filelist = new List<string> {f + ".ini", f + ".bmp", f + ".nds"};
-
+                if (file.EndsWith(".plg") || file.EndsWith(".nds"))
+                    plugin_file = file;
+                else
+                    continue;
+                
                 var plug = new Plugin
                 {
-                    Name = f,
-                    Path = DstwoPlugDirectory,
-                    Files = filelist // TODO: De-un-hardcode this maybe?
+                    Name = plugin_file,
+                    ParentPath = DstwoPlugDirectory,
+                    PluginFile = plugin_file
                 };
+
+                plugin_file = Path.Combine(DstwoPlugDirectory, Path.GetFileNameWithoutExtension(plugin_file));
+
+                if (File.Exists(plugin_file + ".ini"))
+                    plug.IniFile = plugin_file + ".ini";
+
+                plug.BmpFile = plug.GetIconFromIni();
+
+                if (plug.BmpFile == string.Empty)
+                    if (File.Exists(plugin_file + ".bmp"))
+                        plug.BmpFile = plugin_file + ".bmp";
 
                 InstalledPlugins.Add(plug);
             }
@@ -143,6 +116,101 @@ namespace DSTWO_Manager
             InstalledPluginsDataGrid.ItemsSource = null;
             InstalledPluginsDataGrid.ItemsSource = InstalledPlugins;
             return InstalledPlugins;
+        }
+
+        private void GetRepoPlugins()
+        {
+            UninstalledPlugins = new ObservableCollection<Plugin>();
+
+            // Local
+            // TODO: Seperate boxes instead of splitting by ;?
+            AddPlugins(LocalPluginSources.Text.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries));
+
+            // Remote
+
+            //
+            InstallPluginsDataGrid.ItemsSource = null;
+            InstallPluginsDataGrid.ItemsSource = UninstalledPlugins;
+        }
+
+        private void AddPlugins(string[] repoList, bool installed = false)
+        {
+            foreach (var repo in repoList)
+            {
+                if (!Directory.Exists(repo))
+                    continue;
+
+                foreach (var dir in Directory.GetDirectories(repo))
+                {
+                    GetPluginsFromDirectory(dir);
+                }
+            }
+        }
+
+        private void GetPluginsFromDsTwoPlug(string dir)
+        {
+            foreach (var file in new DirectoryInfo(dir).GetFiles())
+            {
+                var plugin = new Plugin();
+
+                if (!file.Name.EndsWith(".ini", true, CultureInfo.CurrentCulture))
+                {
+                    continue;
+                }
+
+                plugin.IniFile = file.FullName;
+
+                var f = Path.GetFileNameWithoutExtension(file.Name);
+                f = Path.Combine(DstwoPlugDirectory, f);
+
+                if (File.Exists(f + ".bmp"))
+                    plugin.BmpFile = f + ".bmp";
+
+                if (File.Exists(f + ".plg"))
+                    plugin.PluginFile = f + ".plg";
+                else if (File.Exists(f + ".nds"))
+                    plugin.PluginFile = f + ".nds";
+
+                plugin.Name = Path.GetFileNameWithoutExtension(file.Name);
+                plugin.ParentPath = dir;
+
+                InstalledPlugins.Add(plugin);
+            }
+
+            InstalledPluginsDataGrid.ItemsSource = null;
+            InstalledPluginsDataGrid.ItemsSource = InstalledPlugins;
+        }
+
+        private void GetPluginsFromDirectory(string dir)
+        {
+            var plugin = new Plugin();
+
+            foreach (var file in new DirectoryInfo(dir).GetFiles())
+            {
+                if (file.Name.EndsWith(".plg", true, CultureInfo.CurrentCulture) ||
+                    file.Name.EndsWith(".nds", true, CultureInfo.CurrentCulture))
+                {
+                    plugin.PluginFile = file.FullName;
+                }
+
+                if (file.Name.EndsWith(".ini", true, CultureInfo.CurrentCulture))
+                {
+                    plugin.IniFile = file.FullName;
+                }
+
+                if (file.Name.EndsWith(".bmp", true, CultureInfo.CurrentCulture))
+                {
+                    plugin.BmpFile = file.FullName;
+                }
+            }
+
+            if (plugin.BmpFile == string.Empty)
+                plugin.BmpFile = plugin.GetIconFromIni();
+
+            plugin.Name = new DirectoryInfo(dir).Name;
+            plugin.ParentPath = dir;
+
+            UninstalledPlugins.Add(plugin);
         }
 
         private void ConnectButton_OnClick(object sender, RoutedEventArgs e)
@@ -153,8 +221,9 @@ namespace DSTWO_Manager
             }
             catch (Exception ex)
             {
-                //TabControl.IsEnabled = false;
-                //MessageBox.Show(ex.Message);
+                TabControl.IsEnabled = false;
+                MessageBox.Show(ex.Message);
+                return;
             }
 
             TabControl.IsEnabled = true;
@@ -165,27 +234,13 @@ namespace DSTWO_Manager
         {
             foreach (Plugin plugin in InstallPluginsDataGrid.SelectedItems)
             {
-                var scan_fail = false;
-                foreach (var file in plugin.Files)
-                {
-                    if (File.Exists(Path.Combine(DstwoPlugDirectory, file)))
-                    {
-                        scan_fail = true;
-                        MessageBox.Show($"Plugin: {plugin.Name} is already installed!");
-                        break;
-                    }
-                }
-
-                if (scan_fail)
-                    continue;
-
-                foreach (var file in plugin.Files)
-                {
-                    File.Copy(Path.Combine(plugin.Path, file), Path.Combine(DstwoPlugDirectory, file));
-                }
+                plugin.Install(DstwoPlugDirectory);
 
                 var p = plugin;
-                p.Path = DstwoPlugDirectory;
+                p.ParentPath = DstwoPlugDirectory;
+                if (p.BmpFile != null) p.BmpFile = Path.Combine(DstwoPlugDirectory, Path.GetFileName(p.BmpFile));
+                if (p.IniFile != null) p.IniFile = Path.Combine(DstwoPlugDirectory, Path.GetFileName(p.IniFile));
+                if (p.PluginFile != null) p.PluginFile = Path.Combine(DstwoPlugDirectory, Path.GetFileName(p.PluginFile));
                 InstalledPlugins.Add(p);
             }
         }
