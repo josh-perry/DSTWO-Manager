@@ -91,12 +91,28 @@ namespace DSTWO_Manager
 
         public void Install(string installDirectory)
         {
-            if (PluginFile == null)
+            if (IniFile == null)
             {
-                MessageBox.Show($"{Name} has no ini file! TODO: Autogenerate an alternative.");
-                return;
+                var result = MessageBox.Show($"{Name} has no ini file! Autogenerate one?", "Attention", MessageBoxButton.YesNo);
+
+                if (result == MessageBoxResult.No)
+                    return;
+
+                var bmp = String.Empty;
+                if(BmpFile != null)
+                   bmp = new FileInfo(BmpFile).Name;
+
+                var iniLines = new string[]
+                {
+                    "[plug setting]",
+                    "icon=fat1:/_dstwoplug/" + bmp,
+                    "name=" + Name
+                };
+
+                File.WriteAllLines(Path.Combine(installDirectory, Path.GetFileNameWithoutExtension(PluginFile) + ".ini"), iniLines);
             }
-            else if (File.Exists(Path.Combine(installDirectory, new FileInfo(PluginFile).Name)))
+
+            if (File.Exists(Path.Combine(installDirectory, new FileInfo(PluginFile).Name)))
             {
                 MessageBox.Show($"Plugin: {Name} is already installed!");
                 return;
